@@ -1,0 +1,12 @@
+#+title: fpga experiments
+
+* Old Code for FPGA
+
+Edit with Xilinx ISE
+
+   https://www.xilinx.com/products/design-tools/ise-design-suite.html
+
+Install with Papilio Loader and run on papilio one
+
+   http://papilio.cc/index.php?n=Papilio.PapilioOne
+
