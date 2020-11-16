@@ -33,7 +33,7 @@ input clock;
 input rx;
 output tx;
 
-parameter [31:0] FREQ = 50000000; // incoming clock frequency
+parameter [31:0] FREQ = 32000000; // incoming clock frequency
 parameter [31:0] RATE = 115200; // desired baud rate
 parameter BITLENGTH = FREQ / RATE;
 
@@ -147,6 +147,7 @@ reg [10:0] wr_pointer, rd_pointer, rd_stop;
 reg [7:0] ram [0:2047];
 reg [7:0] data_out;
 reg data_available;
+reg byteDone, next_byteDone;
 
 
 always @(posedge clock or posedge reset)
@@ -190,7 +191,6 @@ reg [9:0] tx_count, next_tx_count;
 reg [2:0] tx_bitcount, next_tx_bitcount;
 reg [7:0] txByte, next_txByte;
 reg tx, next_tx;
-reg byteDone, next_byteDone;
 
 always @(posedge clock or posedge reset) 
 begin
@@ -221,7 +221,8 @@ begin
   next_tx = tx;
 
   case(tx_state)
-    TX_IDLE: begin
+    TX_IDLE:
+    begin
       next_tx = 1'b1;
       next_tx_bitcount = 0;
       if (data_available) begin
@@ -231,7 +232,8 @@ begin
         next_tx = 1'b0;
       end
     end
-    TX_START: begin
+    TX_START: 
+    begin
       next_tx_count = tx_count + 1'b1;
       next_byteDone = 0;
       if (tx_count == BITLENGTH - 1) begin
@@ -241,7 +243,8 @@ begin
         next_txByte = {1'b0, txByte[7:1]};
       end
     end
-    TX_SEND: begin
+    TX_SEND:
+    begin
       next_tx_count = tx_count + 1'b1;
       next_byteDone = 0;
       if (tx_count == BITLENGTH - 1) begin
@@ -256,7 +259,8 @@ begin
         end
       end
     end
-    TX_STOP: begin
+    TX_STOP: 
+    begin
       next_tx_count = tx_count + 1'b1;
       next_byteDone = 0;
       if (tx_count == BITLENGTH - 1) begin
